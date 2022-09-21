@@ -16,7 +16,7 @@ class User(AbstractUser):
     bio = models.TextField(
         'О себе',
         blank=True,
-        max_length=200
+        max_length=300
     )
     role = models.CharField(
         'Роль пользователя',
@@ -40,20 +40,27 @@ class User(AbstractUser):
     class Meta:
         ordering = ('username',)
         verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
 
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
 
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Категория'
+
     def __str__(self):
-        return self.slug
+        return self.name
 
 
 class Genre(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Жанр'
 
     def __str__(self):
         return self.slug
@@ -63,11 +70,23 @@ class Title(models.Model):
     name = models.TextField(max_length=50)
     year = models.IntegerField('Год выпуска')
     description = models.TextField(max_length=400, null=True, blank=True)
-    genre = models.ManyToManyField(Genre)
+    genre = models.ManyToManyField(
+        Genre,
+        related_name='titles',
+        blank=True,
+        verbose_name='Жанр',
+    )
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, related_name="titles", null=True,
         blank=True
     )
+
+    class Meta:
+        ordering = ('year',)
+        verbose_name = 'Произведение'
+
+    def __str__(self):
+        return self.name[:15]
 
 
 class Review(models.Model):
