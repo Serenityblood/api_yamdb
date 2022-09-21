@@ -42,6 +42,7 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
