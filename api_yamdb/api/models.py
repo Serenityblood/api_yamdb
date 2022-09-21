@@ -55,7 +55,7 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Жанр')
     slug = models.SlugField(unique=True)
 
     class Meta:
@@ -67,9 +67,20 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
-    name = models.TextField(max_length=50)
-    year = models.IntegerField('Год выпуска')
-    description = models.TextField(max_length=400, null=True, blank=True)
+    name = models.TextField(max_length=50, verbose_name='Название')
+    year = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Год выпуска',
+        db_index=True,
+        #validators=[]
+    )
+    description = models.TextField(
+        max_length=400,
+        null=True,
+        blank=True,
+        verbose_name='Описание'
+    )
     genre = models.ManyToManyField(
         Genre,
         related_name='titles',
@@ -77,8 +88,12 @@ class Title(models.Model):
         verbose_name='Жанр',
     )
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, related_name="titles", null=True,
-        blank=True
+        Category,
+        on_delete=models.SET_NULL,
+        related_name='titles',
+        null=True,
+        blank=True,
+        verbose_name='Категория'
     )
 
     class Meta:
@@ -111,12 +126,27 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name='comments')
-    text = models.TextField()
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
-    review = models.ForeignKey(Review, on_delete=models.CASCADE,
-                               related_name='comments')
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Автор'
+    )
+    text = models.TextField(verbose_name='Текст комментария')
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True
+    )
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Отзыв',
+    )
+
+    class Meta:
+        ordering = ('-pub_date',)
+        verbose_name = 'Комментарий'
 
     def __str__(self):
         return self.text
+
