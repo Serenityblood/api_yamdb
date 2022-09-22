@@ -14,7 +14,7 @@ class User(AbstractUser):
 
     email = models.EmailField('Почта пользователя', unique=True)
     bio = models.TextField(
-        'О себе',
+        verbose_name='О себе',
         blank=True,
         max_length=300
     )
