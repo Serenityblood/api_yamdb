@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -113,6 +114,10 @@ class Review(models.Model):
     pub_date = models.DateField(
         verbose_name='Дата публикации',
         auto_now_add=True
+    )
+    score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        verbose_name='Оценка'
     )
     text = models.TextField()
     title = models.ForeignKey(
