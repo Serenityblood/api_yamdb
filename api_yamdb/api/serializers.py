@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import User, Category, Genre, Title, Comment, Review
+from .models import User
+from titles.models import Category, Genre, Title, Comment, Review
 
 
 class EmailSerializer(serializers.EmailField):
