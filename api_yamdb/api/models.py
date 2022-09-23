@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -41,3 +42,8 @@ class User(AbstractUser):
     class Meta:
         ordering = ('username',)
         verbose_name = 'Пользователь'
+=======
+from django.db import models
+
+# Create your models here.
+>>>>>>> origin/master
