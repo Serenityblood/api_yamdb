@@ -25,7 +25,7 @@ class User(AbstractUser):
         default=USER
     )
     password = None
-    username = models.CharField(max_length=150, unique=True)
+    username = models.CharField(max_length=150, unique=True, blank=True)
     is_admin = models.BooleanField(default=False)
 
     @property
