@@ -11,8 +11,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
-# Application definition
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_mails')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -12,11 +12,11 @@ class CustomUser(AbstractUser):
         (ADMIN, 'admin'),
     ]
 
-    email = models.EmailField('Почта пользователя', unique=True)
     bio = models.TextField(
         verbose_name='О себе',
         blank=True,
-        max_length=300
+        max_length=300,
+        null=True
     )
     role = models.CharField(
         'Роль пользователя',
@@ -24,8 +24,16 @@ class CustomUser(AbstractUser):
         choices=USER_ROLE,
         default=USER
     )
-    username = models.CharField(max_length=150, unique=True, blank=True)
     is_admin = models.BooleanField(default=False)
+    password = models.CharField(
+        'Пароль', default='12345', max_length=128, null=True
+    )
+    confirmation_code = models.CharField(
+        'Код подтверждения',
+        max_length=150,
+        null=True
+    )
+    email = models.EmailField(db_index=True, unique=True)
 
     REQUIRED_FIELDS = ['email']
 
