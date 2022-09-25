@@ -14,24 +14,44 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'bio', 'role')
+    search_fields = ('username',)
+    list_filter = ('role',)
+    empty_value_display = '--пусто--'
     pass
 
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'bio', 'role')
+    search_fields = ('username',)
+    list_filter = ('role',)
+    empty_value_display = '--пусто--'
     pass
 
 
 @admin.register(Title)
 class TitleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'bio', 'role')
+    search_fields = ('username',)
+    list_filter = ('role',)
+    empty_value_display = '--пусто--'
     pass
 
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'bio', 'role')
+    search_fields = ('username',)
+    list_filter = ('role',)
+    empty_value_display = '--пусто--'
     pass
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'bio', 'role')
+    search_fields = ('username',)
+    list_filter = ('role',)
+    empty_value_display = '--пусто--'
     pass
