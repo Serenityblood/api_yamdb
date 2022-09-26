@@ -6,10 +6,12 @@ class CustomUser(AbstractUser):
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
+    SUPERUSER = 'superuser'
     USER_ROLE = [
         (USER, 'user'),
         (MODERATOR, 'moderator'),
         (ADMIN, 'admin'),
+        (SUPERUSER, 'superuser'),
     ]
 
     bio = models.TextField(
