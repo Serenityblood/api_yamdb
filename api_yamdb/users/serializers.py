@@ -29,3 +29,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
             [user.email],
         )
         return user
+
+
+class AuthSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'confirmation_code']
