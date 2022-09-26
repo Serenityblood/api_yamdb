@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'users',
     'api',
+    'titles',
+
 ]
 
 MIDDLEWARE = [
@@ -87,25 +89,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-
-LANGUAGE_CODE = 'ru'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-AUTH_USER_MODEL = 'users.CustomUser'
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -118,3 +101,21 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }
+
+# Internationalization
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+
+AUTH_USER_MODEL = 'users.User'
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
