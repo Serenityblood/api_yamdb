@@ -25,13 +25,13 @@ class CustomJWTAuthentication(BaseAuthentication):
         except IndexError:
             raise exceptions.AuthenticationFailed('Token prefix missed')
 
-        user = CustomUser.objects.filter(username=payload['id']).first()
-        if user in None:
+        user = CustomUser.objects.filter(pk=payload['id']).first()
+        if user is None:
             raise exceptions.AuthenticationFailed('No such user')
-        if not user.is_active():
+        if not user.is_active:
             raise exceptions.AuthenticationFailed('User deactivated')
         if user.confirmation_code != payload['confirmation_code']:
             raise exceptions.AuthenticationFailed(
                 'Invalid confirmation code'
             )
-        return user
+        return (user, token)
