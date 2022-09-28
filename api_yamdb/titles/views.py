@@ -4,15 +4,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status, viewsets, filters
 from rest_framework.permissions import (
-    IsAuthenticated,
     IsAuthenticatedOrReadOnly
 )
 
 from .models import *
 from users.models import CustomUser
 from api.serializers import (
-    EmailSerializer,
-    UserSerializer,
     ReviewSerializer,
     CommentSerializer,
     GenreSerializer,
@@ -22,18 +19,11 @@ from api.serializers import (
 )
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
-    lookup_field = 'username'
-    serializer_class = UserSerializer
-    permission_classes = [AdminPermission] # Remember!! add permision
-
-
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     lookup_field = 'slug'
     serializer_class = GenreSerializer
-    permission_classes = [GeneralPermission] # Remember!! add permision
+    permission_classes = [GeneralPermission]  # Remember!! add permision
 
     filter_backends = [filters.SearchFilter]
     search_fields = ('name',)

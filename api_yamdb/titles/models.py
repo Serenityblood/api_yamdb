@@ -107,6 +107,11 @@ class Comment(models.Model):
         related_name='comments',
         verbose_name='Отзыв',
     )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
 
     class Meta:
         ordering = ('-pub_date',)
