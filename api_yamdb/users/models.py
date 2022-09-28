@@ -2,21 +2,23 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
+    SUPERUSER = 'superuser'
     USER_ROLE = [
         (USER, 'user'),
         (MODERATOR, 'moderator'),
         (ADMIN, 'admin'),
+        (SUPERUSER, 'superuser'),
     ]
 
-    email = models.EmailField('Почта пользователя', unique=True)
     bio = models.TextField(
         verbose_name='О себе',
         blank=True,
-        max_length=300
+        max_length=300,
+        null=True
     )
     role = models.CharField(
         'Роль пользователя',
@@ -24,9 +26,18 @@ class User(AbstractUser):
         choices=USER_ROLE,
         default=USER
     )
-    password = None
-    username = models.CharField(max_length=150, unique=True, blank=True)
     is_admin = models.BooleanField(default=False)
+    password = models.CharField(
+        'Пароль', default='12345', max_length=128, null=True
+    )
+    confirmation_code = models.CharField(
+        'Код подтверждения',
+        max_length=150,
+        null=True
+    )
+    email = models.EmailField(db_index=True, unique=True)
+
+    REQUIRED_FIELDS = ['email']
 
     @property
     def is_user(self):
