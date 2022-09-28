@@ -59,6 +59,7 @@ class AuthViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 class UserAPIView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
+    lookup_field = ('username',)
     serializer_class = UserSerializer
     permission_classes = (AdminOnlyPermission,)
 
