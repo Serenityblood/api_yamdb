@@ -2,17 +2,16 @@ from xml.etree.ElementInclude import include
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import RegistrationAPIView, AuthViewSet, UserAPIView
+from .views import UserViewSet, get_update_me, get_token, signup
 
 app_name = 'users'
 
 router = DefaultRouter()
-router.register(r'token', AuthViewSet, basename='token')
+router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
-    path('auth/signup/', RegistrationAPIView.as_view(), name='signup'),
-    path(
-        'auth/', include(router.urls)
-    ),
-    path('users/', UserAPIView.as_view(), name='users')
+    path('auth/signup/', signup, name='signup'),
+    path('auth/token/', get_token, name='token'),
+    path('users/me/', get_update_me, name='me'),
+    path('', include(router.urls)),
 ]
