@@ -1,7 +1,4 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
-from users.models import CustomUser
 
 
 class Category(models.Model):
@@ -57,6 +54,11 @@ class Title(models.Model):
         blank=True,
         verbose_name='Категория'
     )
+    rating = models.IntegerField(
+        verbose_name='Рейтинг',
+        null=True,
+        default=None
+    )
 
     class Meta:
         ordering = ('year',)
@@ -64,59 +66,3 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name[:15]
-
-
-class Review(models.Model):
-    author = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='reviews'
-    )
-    pub_date = models.DateField(
-        verbose_name='Дата публикации',
-        auto_now_add=True
-    )
-    score = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(10)],
-        verbose_name='Оценка'
-    )
-    text = models.TextField()
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='revievs'
-    )
-
-    def __str__(self):
-        return self.text
-
-
-class Comment(models.Model):
-    author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='Автор'
-    )
-    text = models.TextField(verbose_name='Текст комментария')
-    pub_date = models.DateTimeField(
-        verbose_name='Дата публикации',
-        auto_now_add=True
-    )
-    review = models.ForeignKey(
-        Review,
-        on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='Отзыв',
-    )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='comments'
-    )
-
-    class Meta:
-        ordering = ('-pub_date',)
-        verbose_name = 'Комментарий'
-
-    def __str__(self):
-        return self.text

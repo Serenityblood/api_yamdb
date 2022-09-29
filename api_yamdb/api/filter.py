@@ -1,21 +1,21 @@
 """
 Dont useles it is test!!!!!!!
 """
-import django_filters
+#import django_filters
 
-from titles.models import Title
+#from titles.models import Title
 
 
-class TitleFilter(django_filters.FilterSet):
-    category = django_filters.CharFilter(field_name='category__slug')
-    genre = django_filters.CharFilter(
-        field_name='genre__slug'
-    )
-    name = django_filters.CharFilter(
-        field_name='name',
-        lookup_expr='icontains'
-    )
+#class TitleFilter(django_filters.FilterSet):
+#    category = django_filters.CharFilter(field_name='category__slug')
+#    genre = django_filters.CharFilter(
+#        field_name='genre__slug'
+#    )
+#    name = django_filters.CharFilter(
+#        field_name='name',
+#        lookup_expr='icontains'
+#    )
 
-    class Meta:
-        model = Title
-        fields = ('category', 'genre', 'name', 'year')
+#    class Meta:
+#        model = Title
+#        fields = ('category', 'genre', 'name', 'year')
