@@ -54,11 +54,6 @@ class Title(models.Model):
         blank=True,
         verbose_name='Категория'
     )
-    rating = models.IntegerField(
-        verbose_name='Рейтинг',
-        null=True,
-        default=None
-    )
 
     class Meta:
         ordering = ('year',)
