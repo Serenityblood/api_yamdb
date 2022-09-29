@@ -6,12 +6,10 @@ class CustomUser(AbstractUser):
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
-    SUPERUSER = 'superuser'
     USER_ROLE = [
         (USER, 'user'),
         (MODERATOR, 'moderator'),
         (ADMIN, 'admin'),
-        (SUPERUSER, 'superuser'),
     ]
 
     bio = models.TextField(
@@ -24,20 +22,9 @@ class CustomUser(AbstractUser):
         'Роль пользователя',
         max_length=50,
         choices=USER_ROLE,
-        default=USER
+        default=USER_ROLE[0][0]
     )
-    is_admin = models.BooleanField(default=False)
-    password = models.CharField(
-        'Пароль', default='12345', max_length=128, null=True
-    )
-    confirmation_code = models.CharField(
-        'Код подтверждения',
-        max_length=150,
-        null=True
-    )
-    email = models.EmailField(db_index=True, unique=True)
-
-    REQUIRED_FIELDS = ['email']
+    email = models.EmailField(db_index=True, unique=True, blank=False)
 
     @property
     def is_user(self):
@@ -49,8 +36,14 @@ class CustomUser(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == self.ADMIN or self.is_staff
+        return self.role == self.ADMIN
 
     class Meta:
         ordering = ('username',)
         verbose_name = 'Пользователь'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['username', 'email'],
+                name='unique_username_email'
+            )
+        ]
