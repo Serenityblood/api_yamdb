@@ -56,7 +56,7 @@ class Title(models.Model):
     )
 
     class Meta:
-        ordering = ('year',)
+        ordering = ('genre__slug',)
         verbose_name = 'Произведение'
 
     def __str__(self):
