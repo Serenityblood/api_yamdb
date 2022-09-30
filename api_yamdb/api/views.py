@@ -2,6 +2,7 @@ from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, viewsets, mixins
 from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 from reviews.models import Review
 from titles.models import Title, Category, Genre
@@ -11,6 +12,7 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
                           TitleReadSerializer,
                           TitleWriteSerializer)
+from .filter import TitlesFilter
 
 
 class CategoryViewSet(
@@ -49,6 +51,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleWriteSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TitlesFilter
 
     def get_serializer_class(self):
         if self.action in ("retrieve", "list"):
