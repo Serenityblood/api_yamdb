@@ -51,16 +51,25 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(write_only=True, required=False)
+
     class Meta:
         model = Genre
-        fields = '__all__'
+        fields = ('id', 'name', 'slug')
+
+    def __str__(self):
+        return f'{self.slug}', f'{self.name}'
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
-        fields = ('name', 'slug')
         model = Category
+        fields = ('id', 'name', 'slug')
+
+    def __str__(self):
+        return self.name, self.slug
 
 
 class TitleReadSerializer(serializers.ModelSerializer):
