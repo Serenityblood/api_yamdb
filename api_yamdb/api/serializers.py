@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from users.models import CustomUser
 from reviews.models import Comment, Review
-from titles.models import Title, Category, Genre
+from titles.models import Category, Genre, Title
+from users.models import CustomUser
 
 
 class EmailSerializer(serializers.EmailField):

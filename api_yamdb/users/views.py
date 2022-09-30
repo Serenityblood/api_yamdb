@@ -1,15 +1,15 @@
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import default_token_generator
-from rest_framework import status, viewsets, filters
+from django.shortcuts import get_object_or_404
+from rest_framework import filters, status, viewsets
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.decorators import api_view
 
 from .permissions import IsAdminOrSuperuser
 from .serializers import (
-    MeSerializer, UserSerializer, SingUpSerializer,
-    TokenSerializer, MeSerializer
+    MeSerializer, SingUpSerializer,
+    TokenSerializer, UserSerializer
 )
 from .models import CustomUser
 
