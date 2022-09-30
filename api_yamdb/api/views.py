@@ -46,11 +46,12 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(
         rating=Avg("reviews__score")
     ).order_by("name")
+    serializer_class = TitleWriteSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
 
     def get_serializer_class(self):
-        if self.action in ("retireve", "list"):
+        if self.action in ("retrieve", "list"):
             return TitleReadSerializer
         return TitleWriteSerializer
 
