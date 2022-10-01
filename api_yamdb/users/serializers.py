@@ -1,9 +1,17 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from users.models import CustomUser
+from .validators import validate_username
 
 
-class UserSerializer(serializers.ModelSerializer):
+class ValidateUsername(serializers.Serializer):
+
+    def validate_username(self, value):
+        return validate_username(value)
+
+
+class UserSerializer(serializers.ModelSerializer, ValidateUsername):
 
     class Meta:
         model = CustomUser
@@ -17,22 +25,13 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
         )
 
-    def __str__(self) -> str:
-        return self.username
+
+class SingUpSerializer(ValidateUsername):
+    username = serializers.CharField(max_length=settings.USERNAME_SIZE)
+    email = serializers.EmailField(max_length=settings.EMAIL_SIZE)
 
 
-class SingUpSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'email')
-
-    def validate_username(self, value):
-        if 'me' == value:
-            raise serializers.ValidationError('me - недоступно')
-        return value
-
-
-class TokenSerializer(serializers.Serializer):
+class TokenSerializer(ValidateUsername):
     username = serializers.CharField(max_length=100)
     confirmation_code = serializers.CharField(max_length=500)
 

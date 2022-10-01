@@ -43,3 +43,7 @@ python3 manage.py runserver
 
 ## Документация:
 > Находится на эндпоинте: http://127.0.0.1:8000/redoc/ с примерами ответов API
+
+## Авторы проект:
+> Serenity(Users/Auth), Lolozius(Serializers/Views), Nail(Models)
+>

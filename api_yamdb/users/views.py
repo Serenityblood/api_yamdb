@@ -1,9 +1,11 @@
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
+from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import AccessToken
 
 from .permissions import IsAdminOrSuperuser
@@ -28,26 +30,32 @@ def sent_verification_code(user):
 @api_view(['POST'])
 def signup(request):
     serializer = SingUpSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
+    serializer.is_valid(raise_exception=True)
+    try:
         user, _ = CustomUser.objects.get_or_create(
-            username=serializer.data['username'],
-            email=serializer.data['email'])
+            username=serializer.validated_data['username'],
+            email=serializer.validated_data['email'])
+    except IntegrityError:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
         sent_verification_code(user)
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.validated_data)
 
 
 @api_view(['POST'])
 def get_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user = get_object_or_404(CustomUser, username=serializer.data['username'])
-    confirmation_code = serializer.data['confirmation_code']
+    user = get_object_or_404(
+        CustomUser,
+        username=serializer.validated_data['username']
+    )
+    confirmation_code = serializer.validated_data['confirmation_code']
     if default_token_generator.check_token(user, confirmation_code):
         token = AccessToken.for_user(user)
-        return Response(f'{token}', status=status.HTTP_200_OK)
+        return Response({'Access': f'{token}'}, status=status.HTTP_200_OK)
     return Response(
-        "Отсутствует обязательное поле или оно некорректно",
+        "Отсутствует confirmation_code или он некорректен",
         status=status.HTTP_400_BAD_REQUEST,
     )
 
@@ -59,24 +67,17 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrSuperuser,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
-    lookup_value_regex = "[^/]+"
 
-
-@api_view(['GET', 'PATCH'])
-def get_update_me(request):
-    if request.user.is_anonymous:
-        return Response(
-            "Пожалуйста авторизуйтесь",
-            status=status.HTTP_401_UNAUTHORIZED,
-        )
-    if request.method == "GET":
-        me = get_object_or_404(CustomUser, id=request.user.id)
-        serializer = MeSerializer(me)
-        return Response(serializer.data)
-    me = get_object_or_404(CustomUser, id=request.user.id)
-    serializer = MeSerializer(me, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors,
-                    status=status.HTTP_400_BAD_REQUEST)
+    @action(methods=['GET', 'PATCH'], detail=False,
+            permission_classes=(IsAuthenticated,))
+    def me(self, request):
+        user = request.user
+        if request.method == "GET":
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        serializer = MeSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)

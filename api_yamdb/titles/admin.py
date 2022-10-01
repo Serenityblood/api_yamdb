@@ -23,8 +23,9 @@ class ReviewAdmin(admin.ModelAdmin):
 @admin.register(Title)
 class TitleAdmin(admin.ModelAdmin):
     list_display = ('id', 'category', 'name', 'year', 'description')
+    list_editable = ('category',)
     search_fields = ('name',)
-    list_filter = ('year', 'category', 'genre')
+    list_filter = ('year', 'category')
     empty_value_display = '--пусто--'
 
 

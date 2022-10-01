@@ -2,20 +2,6 @@ from rest_framework import serializers
 
 from reviews.models import Comment, Review
 from titles.models import Category, Genre, Title
-from users.models import CustomUser
-
-
-class EmailSerializer(serializers.EmailField):
-    email = serializers.EmailField(required=True)
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'first_name', 'last_name', 'username', 'bio', 'email', 'role'
-        )
-        model = CustomUser
-        read_only_field = ('role',)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -51,25 +37,17 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
         model = Genre
-        fields = ('id', 'name', 'slug')
-
-    def __str__(self):
-        return f'{self.slug}', f'{self.name}'
+        fields = ('name', 'slug')
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'slug')
-
-    def __str__(self):
-        return self.name, self.slug
+        fields = ('name', 'slug')
 
 
 class TitleReadSerializer(serializers.ModelSerializer):

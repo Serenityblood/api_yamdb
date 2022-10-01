@@ -1,44 +1,52 @@
 from django.db import models
+from django.conf import settings
+
+from .validators import validate_year
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(unique=True)
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name = 'Категория'
-
-    def __str__(self):
-        return self.name
-
-
-class Genre(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Жанр')
-    slug = models.SlugField(unique=True)
+class CaGeAbstractModel(models.Model):
+    name = models.CharField('Название', max_length=settings.NAME_SIZE)
+    slug = models.SlugField(unique=True, max_length=settings.SLUG_SIZE)
 
     class Meta:
+        abstract = True
         ordering = ('name',)
-        verbose_name = 'Жанр'
 
     def __str__(self):
         return self.slug
 
 
+class Category(CaGeAbstractModel):
+
+    class Meta(CaGeAbstractModel.Meta):
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+
+class Genre(CaGeAbstractModel):
+
+    class Meta(CaGeAbstractModel.Meta):
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
+
+    def name_list(self):
+        return (self.name, self.slug)
+
+
 class Title(models.Model):
-    name = models.TextField(max_length=50, verbose_name='Название')
+    name = models.TextField('Название', max_length=settings.NAME_SIZE)
     year = models.PositiveSmallIntegerField(
+        'Год выпуска',
         blank=True,
         null=True,
-        verbose_name='Год выпуска',
         db_index=True,
-        # validators=[]
+        validators=[validate_year]
     )
     description = models.TextField(
-        max_length=400,
+        'Описание',
         null=True,
         blank=True,
-        verbose_name='Описание'
+        max_length=settings.NAME_SIZE
     )
     genre = models.ManyToManyField(
         Genre,
@@ -56,8 +64,9 @@ class Title(models.Model):
     )
 
     class Meta:
-        ordering = ('genre__slug',)
+        ordering = ('name',)
         verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
 
     def __str__(self):
         return self.name[:15]

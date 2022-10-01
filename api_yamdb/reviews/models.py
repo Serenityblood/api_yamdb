@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -5,65 +6,59 @@ from titles.models import Title
 from users.models import CustomUser
 
 
-class Review(models.Model):
+class ReCoAbstractModel(models.Model):
     author = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='reviews'
+        CustomUser, on_delete=models.CASCADE,
+        verbose_name='Автор'
     )
     pub_date = models.DateField(
-        verbose_name='Дата публикации',
+        'Дата публикации',
         auto_now_add=True
     )
-    score = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(10)],
-        verbose_name='Оценка'
-    )
-    text = models.TextField()
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
-        related_name='reviews'
+        verbose_name='Произведение'
     )
+    text = models.TextField('Текст комментария')
 
-    def __str__(self):
-        return self.text
+    def __str__(self) -> str:
+        return self.text[:settings.TEXT_SIZE]
 
     class Meta:
+        abstract = True
         ordering = ('pub_date',)
+
+
+class Review(ReCoAbstractModel):
+    score = models.PositiveSmallIntegerField(
+        'Оценка',
+        validators=[
+            MinValueValidator(1, message=('Не может быть меньше 1')),
+            MaxValueValidator(10, message=('Не может быть больше 10'))
+        ],
+        default=None
+    )
+
+    class Meta(ReCoAbstractModel.Meta):
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
         constraints = [
             models.UniqueConstraint(
                 fields=['author', 'title'], name='unique_author_title'
             )
         ]
+        default_related_name = 'reviews'
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='Автор'
-    )
-    text = models.TextField(verbose_name='Текст комментария')
-    pub_date = models.DateTimeField(
-        verbose_name='Дата публикации',
-        auto_now_add=True
-    )
+class Comment(ReCoAbstractModel):
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        related_name='comments',
         verbose_name='Отзыв',
     )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name='comments'
-    )
 
-    class Meta:
-        ordering = ('-pub_date',)
+    class Meta(ReCoAbstractModel.Meta):
+        default_related_name = 'comments'
         verbose_name = 'Комментарий'
-
-    def __str__(self):
-        return self.text
+        verbose_name_plural = 'Комментарии'
