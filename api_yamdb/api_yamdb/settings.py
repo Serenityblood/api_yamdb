@@ -128,3 +128,5 @@ SLUG_SIZE = 50
 USERNAME_SIZE = 150
 
 EMAIL_SIZE = 254
+
+ADMIN_EMAIL = 'fake.admin@yambd.fake'

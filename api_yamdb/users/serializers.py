@@ -36,10 +36,7 @@ class TokenSerializer(ValidateUsername):
     confirmation_code = serializers.CharField(max_length=500)
 
 
-class MeSerializer(serializers.ModelSerializer):
-    role = serializers.StringRelatedField(read_only=True)
+class MeSerializer(UserSerializer):
 
-    class Meta:
-        fields = (
-            'username', 'email', 'first_name', 'last_name', 'bio', 'role',)
-        model = CustomUser
+    class Meta(UserSerializer.Meta):
+        read_only_fields = ('role',)

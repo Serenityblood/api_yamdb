@@ -1,5 +1,6 @@
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
@@ -21,7 +22,7 @@ def sent_verification_code(user):
     send_mail(
         'Код подтверждения',
         f'Код: {confirmation_code}',
-        '---',
+        settings.ADMIN_EMAIL,
         [user.email],
         fail_silently=False,
     )
@@ -76,8 +77,6 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer = UserSerializer(user)
             return Response(serializer.data)
         serializer = MeSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

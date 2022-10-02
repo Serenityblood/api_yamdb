@@ -62,16 +62,22 @@ class TitleReadSerializer(serializers.ModelSerializer):
         )
 
 
+class CustomSlugField(serializers.SlugRelatedField):
+    def to_representation(self, obj):
+        return {"name": obj.name, "slug": obj.slug}
+
+
 class TitleWriteSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
+    category = CustomSlugField(
         queryset=Category.objects.all(), slug_field='slug'
     )
-    genre = serializers.SlugRelatedField(
+    genre = CustomSlugField(
         queryset=Genre.objects.all(), slug_field='slug', many=True
     )
+    rating = serializers.IntegerField(read_only=True, required=False)
 
     class Meta:
         fields = (
-            'id', 'name', 'year', 'description', 'genre', 'category'
+            'id', 'name', 'year', 'description', 'genre', 'category', 'rating'
         )
         model = Title

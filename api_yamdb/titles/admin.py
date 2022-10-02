@@ -20,15 +20,6 @@ class ReviewAdmin(admin.ModelAdmin):
     empty_value_display = '--пусто--'
 
 
-@admin.register(Title)
-class TitleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'category', 'name', 'year', 'description')
-    list_editable = ('category',)
-    search_fields = ('name',)
-    list_filter = ('year', 'category')
-    empty_value_display = '--пусто--'
-
-
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
@@ -43,3 +34,17 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('name',)
     empty_value_display = '--пусто--'
+
+
+@admin.register(Title)
+class TitleAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'category', 'name', 'year', 'description', 'get_genres'
+    )
+    list_editable = ('category',)
+    search_fields = ('name',)
+    list_filter = ('year', 'category')
+    empty_value_display = '--пусто--'
+
+    def get_genres(self, obj):
+        return '\n'.join([str(genre) for genre in obj.genre.all()])
