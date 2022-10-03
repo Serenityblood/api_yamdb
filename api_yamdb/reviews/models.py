@@ -15,11 +15,6 @@ class ReCoAbstractModel(models.Model):
         'Дата публикации',
         auto_now_add=True
     )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        verbose_name='Произведение'
-    )
     text = models.TextField('Текст комментария')
 
     def __str__(self) -> str:
@@ -38,6 +33,11 @@ class Review(ReCoAbstractModel):
             MaxValueValidator(10, message=('Не может быть больше 10'))
         ],
         default=None
+    )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        verbose_name='Произведение'
     )
 
     class Meta(ReCoAbstractModel.Meta):

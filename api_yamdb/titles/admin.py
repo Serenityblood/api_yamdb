@@ -6,7 +6,7 @@ from .models import Category, Genre, Title
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'author', 'pub_date', 'title', 'review')
+    list_display = ('id', 'text', 'author', 'pub_date', 'review')
     search_fields = ('text',)
     list_filter = ('review', 'author')
     empty_value_display = '--пусто--'
