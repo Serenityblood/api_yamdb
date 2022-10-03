@@ -45,27 +45,6 @@ class CustomUser(AbstractUser):
         unique=True,
         validators=[validate_username]
     )
-    is_superuser = models.BooleanField(
-        ('superuser status'),
-        default=False,
-        help_text=(
-            'Designates that this user has all permissions without '
-            'explicitly assigning them.'
-        ),
-    )
-    is_staff = models.BooleanField(
-        ('staff status'),
-        default=False,
-        help_text=('Designates whether the user can log into this admin site.'),
-    )
-    is_active = models.BooleanField(
-        ('active'),
-        default=True,
-        help_text=(
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ),
-    )
 
     class Meta:
         ordering = ('username',)
