@@ -7,6 +7,7 @@ from users.models import CustomUser
 
 
 class ReCoAbstractModel(models.Model):
+    """Абстрактная модель для ревью и комментариев."""
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
         verbose_name='Автор'
@@ -17,22 +18,23 @@ class ReCoAbstractModel(models.Model):
     )
     text = models.TextField('Текст комментария')
 
-    def __str__(self) -> str:
-        return self.text[:settings.TEXT_SIZE]
-
     class Meta:
         abstract = True
         ordering = ('pub_date',)
 
+    def __str__(self) -> str:
+        return self.text[:settings.TEXT_SIZE]
+
 
 class Review(ReCoAbstractModel):
+    """Модель ревью."""
     score = models.PositiveSmallIntegerField(
         'Оценка',
         validators=[
             MinValueValidator(1, message=('Не может быть меньше 1')),
             MaxValueValidator(10, message=('Не может быть больше 10'))
         ],
-        default=None
+        default=1
     )
     title = models.ForeignKey(
         Title,
@@ -52,6 +54,7 @@ class Review(ReCoAbstractModel):
 
 
 class Comment(ReCoAbstractModel):
+    """Модель комментариев."""
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,

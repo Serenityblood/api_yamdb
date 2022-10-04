@@ -6,24 +6,24 @@ from .validators import validate_username
 
 
 class CustomUser(AbstractUser):
+    """Модель юзера."""
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
     USER_ROLE = (
-        (USER, 'user'),
-        (MODERATOR, 'moderator'),
-        (ADMIN, 'admin'),
+        (USER, 'Юзер'),
+        (MODERATOR, 'Модератор'),
+        (ADMIN, 'Админ'),
     )
 
     bio = models.TextField(
         verbose_name='О себе',
         blank=True,
-        max_length=settings.USERNAME_SIZE,
         null=True
     )
     role = models.CharField(
         'Роль пользователя',
-        max_length=50,
+        max_length=len(MODERATOR),
         choices=USER_ROLE,
         default=USER
     )

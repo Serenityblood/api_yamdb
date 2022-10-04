@@ -5,8 +5,9 @@ from .validators import validate_year
 
 
 class CaGeAbstractModel(models.Model):
+    """Абстрактная модель для Категорий и жанров."""
     name = models.CharField('Название', max_length=settings.NAME_SIZE)
-    slug = models.SlugField(unique=True, max_length=settings.SLUG_SIZE)
+    slug = models.SlugField('Слаг', unique=True, max_length=settings.SLUG_SIZE)
 
     class Meta:
         abstract = True
@@ -17,6 +18,7 @@ class CaGeAbstractModel(models.Model):
 
 
 class Category(CaGeAbstractModel):
+    """Модель категорий."""
 
     class Meta(CaGeAbstractModel.Meta):
         verbose_name = 'Категория'
@@ -24,6 +26,7 @@ class Category(CaGeAbstractModel):
 
 
 class Genre(CaGeAbstractModel):
+    """Модель жанров."""
 
     class Meta(CaGeAbstractModel.Meta):
         verbose_name = 'Жанр'
@@ -34,6 +37,7 @@ class Genre(CaGeAbstractModel):
 
 
 class Title(models.Model):
+    """Модель произведений."""
     name = models.TextField('Название', max_length=settings.NAME_SIZE)
     year = models.PositiveSmallIntegerField(
         'Год выпуска',

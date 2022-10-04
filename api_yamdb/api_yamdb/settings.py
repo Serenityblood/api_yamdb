@@ -129,4 +129,6 @@ USERNAME_SIZE = 150
 
 EMAIL_SIZE = 254
 
+CONF_CODE_SIZE = 500
+
 ADMIN_EMAIL = 'fake.admin@yambd.fake'

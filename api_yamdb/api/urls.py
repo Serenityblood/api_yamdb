@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from api.views import (
     CategoryViewSet, CommentViewSet, GenreViewSet, ReviewViewSet, TitleViewSet
 )
-from users.views import get_token, signup, UserViewSet
+from .views import get_token, signup, UserViewSet
 
 app_name = 'api'
 
