@@ -132,3 +132,5 @@ EMAIL_SIZE = 254
 CONF_CODE_SIZE = 500
 
 ADMIN_EMAIL = 'fake.admin@yambd.fake'
+
+ALLOWED_SYMBOLS = r'[\w.@+-]'

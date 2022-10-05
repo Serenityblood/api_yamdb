@@ -1,6 +1,4 @@
-from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
-from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
@@ -23,6 +21,7 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           MeSerializer, TokenSerializer)
 from .filter import TitlesFilter
 from .mixins import CategoryGenreMixin
+from .utils import sent_verification_code
 from reviews.models import Review
 from titles.models import Category, Genre, Title
 from users.models import CustomUser
@@ -87,18 +86,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, title=self.get_title())
-
-
-def sent_verification_code(user):
-    """Отправляет код подтверждения."""
-    confirmation_code = default_token_generator.make_token(user)
-    send_mail(
-        'Код подтверждения',
-        f'Код: {confirmation_code}',
-        settings.ADMIN_EMAIL,
-        [user.email],
-        fail_silently=False,
-    )
 
 
 @api_view(['POST'])

@@ -15,6 +15,11 @@ class CustomUser(AbstractUser):
         (MODERATOR, 'Модератор'),
         (ADMIN, 'Админ'),
     )
+    gen = (len(role[1]) for role in USER_ROLE)
+    list_of_size = []
+    for i in range(len(USER_ROLE)):
+        list_of_size.append(next(gen))
+    MAX_ROLE_SIZE = max(list_of_size)
 
     bio = models.TextField(
         verbose_name='О себе',
@@ -23,7 +28,7 @@ class CustomUser(AbstractUser):
     )
     role = models.CharField(
         'Роль пользователя',
-        max_length=len(MODERATOR),
+        max_length=MAX_ROLE_SIZE,
         choices=USER_ROLE,
         default=USER
     )
